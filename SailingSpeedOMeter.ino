@@ -4,8 +4,8 @@
  Author:	Gabriel Butcher
 */
 
-
 #include "Pins.h"
+#include "Enums.h"
 
 #include <Wire.h>
 #include <LiquidCrystal.h> 
@@ -19,29 +19,12 @@
 #include "ButtonHandler.h"
 
 
-
-const long msInDay = 86400000; // 86400000 milliseconds in a day
-const long msInHour = 3600000; // 3600000 milliseconds in an hour
-const long msInMinute = 60000; // 60000 milliseconds in a minute
-const long msInSecond = 1000; // 1000 milliseconds in a second
-
-
-uint32_t StartTime;
-bool recordElapsedTime = false;
-uint32_t lastSaveTimeStamp = 0;
-const uint32_t msPerSave = 10 * msInMinute * msInSecond;
-
 SPIFlash flash;
 uint32_t freeFlashAddress;
 
+ApplicationStates currentAppState = AppStates_MainScreen;
+
 LiquidCrystal lcd(Pin_Screen_RS, Pin_Screen_EN, Pin_Screen_D4, Pin_Screen_D5, Pin_Screen_D6, Pin_Screen_D7);
-
-
-char convertedTime[17] = "00d 00:00:00.000";
-byte RTCTimeBuffer[7] = { 0, 0, 0, 0, 0, 0, 0 };
-
-int loopCounter = 0;
-bool firstSuccess = false;
 
 NMEAGPS  gps; // This parses the GPS characters
 gps_fix  fix; // This holds on to the latest values
@@ -79,7 +62,7 @@ void setup() {
 	lcd.clear();
 	lcd.display();
 
-
+	// Initalize the button handler - it requires working I2C bus
 	buttonHandler = new ButtonHandler();
 
 	if (buttonHandler->IsDeviceWorking() == false)
@@ -87,10 +70,7 @@ void setup() {
 		Serial.println("IO extender ran into a problem!");
 	}
 
-
 	Serial.println("--- Setup completed succesfully ---");
-
-	StartTime = millis();
 
 	lcd.setCursor(1, 0);
 	lcd.print("Doing btn testing.");
@@ -99,7 +79,9 @@ void setup() {
 // the loop function runs over and over again until power down or reset
 void loop() {
 
+	// Get and refresh the button's status:
 	buttonHandler->UpdateButtonStatus(millis());
+
 
 
 	ButtonStatus status = buttonHandler->GetButtonState(ScreenButton_Confirm);
@@ -125,7 +107,7 @@ void loop() {
 
 void WriteGPSDebugInfo()
 {
-	/*
+
 	//lcd.clear();
 	while (gps.available(gpsPort)) {
 		fix = gps.read();
@@ -151,134 +133,4 @@ void WriteGPSDebugInfo()
 		lcd.print("Lon: ");
 		lcd.print(fix.longitude(), 7);
 	}
-	*/
-}
-
-void MeasureElapsedTime()
-{
-	uint32_t currentTime = millis();
-	uint32_t elapsedTime = currentTime - StartTime;
-
-	ConvertMillisIntoTime(elapsedTime, convertedTime);
-
-	lcd.setCursor(0, 1);         // move cursor to   (2, 1)
-	lcd.print(convertedTime);      // print message at (2, 1)
-
-
-	if (recordElapsedTime == false)
-	{
-		// read the state of the pushbutton value:
-		int buttonState = digitalRead(5);
-
-		// check if the pushbutton is pressed. If it is, the buttonState is HIGH:
-		if (buttonState == HIGH)
-		{
-			recordElapsedTime = true;
-			//Serial.println("Save enabled!");
-		}
-	}
-
-	if (recordElapsedTime && (currentTime - lastSaveTimeStamp) > msPerSave)
-	{
-		freeFlashAddress = flash.getAddress(sizeof(uint32_t));
-
-		bool saveSuccess = flash.writeULong(freeFlashAddress, elapsedTime, true);
-		lastSaveTimeStamp = currentTime;
-
-		//Serial.print("Save status: ");
-		//Serial.println(saveSuccess);
-
-		if (saveSuccess == false)
-		{
-			lcd.setCursor(0, 3);
-			lcd.print("Save failed!!");
-		}
-	}
-}
-
-void ConvertMillisIntoTime(unsigned long elapsedTime, char array[])
-{
-	// The format is the following:
-	// 00d 00:00:00.000
-
-	int days = elapsedTime / msInDay;
-	int hours = (elapsedTime % msInDay) / msInHour;
-	int minutes = ((elapsedTime % msInDay) % msInHour) / msInMinute;
-	int seconds = (((elapsedTime % msInDay) % msInHour) % msInMinute) / msInSecond;
-	int milliseconds = elapsedTime - (days * msInDay) - (hours * msInHour) - (minutes * msInMinute) - (seconds * msInSecond);
-
-	AddNumberToArray(days, 2, 0, array);
-	AddNumberToArray(hours, 2, 4, array);
-	AddNumberToArray(minutes, 2, 7, array);
-	AddNumberToArray(seconds, 2, 10, array);
-	AddNumberToArray(milliseconds, 3, 13, array);
-}
-
-void AddNumberToArray(int number, int lenght, int startPos, char array[17])
-{
-	int i;
-	int c = 0;
-
-	char converted[5]; // Max lenght is 3 character
-
-	itoa(number, converted, 10);
-
-	int numberLenght = GetLenght(number);
-
-	for (i = 0; i < lenght; i++)
-	{
-		if(i < (lenght - numberLenght))
-			array[startPos + i] = '0';
-		else
-			array[startPos + i] = converted[c++];
-	}
-}
-int GetLenght(int number)
-{
-	if (number < 10)
-		return 1;
-	else if (number < 100)
-		return 2;
-	else if (number < 1000)
-		return 3;
-}
-
-
-void I2CScanner() {
-	int nDevices = 0;
-
-	Serial.println("Scanning...");
-
-	for (byte address = 1; address < 127; ++address) {
-		// The i2c_scanner uses the return value of
-		// the Write.endTransmisstion to see if
-		// a device did acknowledge to the address.
-		Wire.beginTransmission(address);
-		byte error = Wire.endTransmission();
-
-		if (error == 0) {
-			Serial.print("I2C device found at address 0x");
-			if (address < 16) {
-				Serial.print("0");
-			}
-			Serial.print(address, HEX);
-			Serial.println("  !");
-
-			++nDevices;
-		}
-		else if (error == 4) {
-			Serial.print("Unknown error at address 0x");
-			if (address < 16) {
-				Serial.print("0");
-			}
-			Serial.println(address, HEX);
-		}
-	}
-	if (nDevices == 0) {
-		Serial.println("No I2C devices found\n");
-	}
-	else {
-		Serial.println("done\n");
-	}
-	delay(5000); // Wait 5 seconds for next scan
 }

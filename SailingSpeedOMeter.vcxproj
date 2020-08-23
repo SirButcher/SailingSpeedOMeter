@@ -117,6 +117,7 @@
   <ItemGroup>
     <ClInclude Include="ButtonHandler.h" />
     <ClInclude Include="C:\Users\Buci\Desktop\PCA9536.h" />
+    <ClInclude Include="Enums.h" />
     <ClInclude Include="Pins.h" />
     <ClInclude Include="__vm\.SailingSpeedOMeter.vsarduino.h" />
   </ItemGroup>

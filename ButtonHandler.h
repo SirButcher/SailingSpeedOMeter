@@ -4,6 +4,7 @@
 #define _BUTTONHANDLER_h
 
 #include "PCA9536.h"
+#include "Enums.h"
 
 #if defined(ARDUINO) && ARDUINO >= 100
 	#include "arduino.h"
@@ -15,35 +16,6 @@
 namespace ScreenButtonHandler {
 
 	const int minimumMillisecForButtonPress = 25;
-
-	typedef enum :byte
-	{
-		// Button IO0
-		ScreenButton_Confirm = 0,
-		// Button IO1
-		ScreenButton_Cancel = 1,
-		// Button IO2
-		ScreenButton_Up = 2,
-		// Button IO3
-		ScreenButton_Down = 3
-	} ScreenButton;
-
-	typedef enum :byte {
-
-		ScreenButtonStatus_None = 0,
-
-		// The button pressed just now, it was unpressed previously.
-		ScreenButtonStatus_JustPressed = 1,
-
-		// The button was either pressed or unpressed last time
-		// but it is pressed now (user holding it down).
-		ScreenButtonStatus_Pressed = 2,
-
-		// The button was pressed, but it is released now.
-		ScreenButtonStatus_Clicked = 3,
-
-	} ButtonStatus;
-
 
 	class ButtonHandler {
 
