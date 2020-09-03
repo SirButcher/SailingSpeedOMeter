@@ -1,10 +1,9 @@
 
 // Created: 22/08/2020
 
-
 #include "ButtonHandler.h"
 
-ScreenButtonHandler::ButtonHandler::ButtonHandler()
+void ScreenButtonHandler::ButtonHandler::Init()
 {
 	// Set up the variables:
 	lastCheckTime = -1; // To ensure a forced first time check

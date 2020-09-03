@@ -93,7 +93,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\SailingSpeedOMeter;C:\Users\Buci\AppData\Local\arduino15\packages\MiniCore\hardware\avr\2.0.5\libraries\Wire\src;C:\Program Files (x86)\Arduino\libraries\LiquidCrystal\src;C:\Users\Buci\Documents\Arduino\libraries\AltSoftSerial;C:\Users\Buci\Documents\Arduino\libraries\NeoGPS\src;C:\Users\Buci\Documents\Arduino\libraries\SPIMemory\src;C:\Users\Buci\AppData\Local\arduino15\packages\MiniCore\hardware\avr\2.0.5\libraries\SPI\src;C:\Users\Buci\AppData\Local\arduino15\packages\MiniCore\hardware\avr\2.0.5\libraries\Wire\src\utility;C:\Users\Buci\AppData\Local\arduino15\packages\MiniCore\hardware\avr\2.0.5\cores\MCUdude_corefiles;C:\Users\Buci\AppData\Local\arduino15\packages\MiniCore\hardware\avr\2.0.5\cores\MCUdude_corefiles\travis-ci;C:\Users\Buci\AppData\Local\arduino15\packages\MiniCore\hardware\avr\2.0.5\variants\standard;C:\Users\Buci\Desktop;C:\Users\Buci\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\\lib\gcc\avr\7.3.0\include;C:\Users\Buci\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\avr\include;C:\Users\Buci\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\\lib\gcc\avr\7.3.0\include;C:\Users\Buci\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\avr\include-fixed;C:\Users\Buci\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\avr\include\avr;C:\Users\Buci\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\lib\gcc\avr\4.9.2\include;C:\Users\Buci\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\lib\gcc\avr\4.9.2\include;C:\Users\Buci\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\lib\gcc\avr\4.9.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\SailingSpeedOMeter;C:\Users\Buci\Documents\Arduino\libraries\SPIMemory\src;C:\Users\Buci\AppData\Local\arduino15\packages\MiniCore\hardware\avr\2.0.5\libraries\SPI\src;C:\Users\Buci\AppData\Local\arduino15\packages\MiniCore\hardware\avr\2.0.5\libraries\Wire\src;C:\Users\Buci\Documents\Arduino\libraries\AltSoftSerial;C:\Users\Buci\Documents\Arduino\libraries\NeoGPS\src;C:\Program Files (x86)\Arduino\libraries\LiquidCrystal\src;C:\Users\Buci\AppData\Local\arduino15\packages\MiniCore\hardware\avr\2.0.5\libraries\Wire\src\utility;C:\Users\Buci\AppData\Local\arduino15\packages\MiniCore\hardware\avr\2.0.5\cores\MCUdude_corefiles;C:\Users\Buci\AppData\Local\arduino15\packages\MiniCore\hardware\avr\2.0.5\cores\MCUdude_corefiles\travis-ci;C:\Users\Buci\AppData\Local\arduino15\packages\MiniCore\hardware\avr\2.0.5\variants\standard;C:\Users\Buci\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\\lib\gcc\avr\7.3.0\include;C:\Users\Buci\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\avr\include;C:\Users\Buci\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\\lib\gcc\avr\7.3.0\include;C:\Users\Buci\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\avr\include-fixed;C:\Users\Buci\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\avr\include\avr;C:\Users\Buci\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\lib\gcc\avr\4.9.2\include;C:\Users\Buci\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\lib\gcc\avr\4.9.2\include;C:\Users\Buci\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\lib\gcc\avr\4.9.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(ProjectDir)__vm\.SailingSpeedOMeter.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <PreprocessorDefinitions>__AVR_atmega328p__;__AVR_ATmega328P__;__AVR_ATmega328p__;_VMDEBUG=1;F_CPU=12000000L;ARDUINO=108013;ARDUINO_AVR_ATmega328;ARDUINO_ARCH_AVR;__cplusplus=201103L;_VMICRO_INTELLISENSE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -116,14 +116,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ButtonHandler.h" />
-    <ClInclude Include="C:\Users\Buci\Desktop\PCA9536.h" />
     <ClInclude Include="Enums.h" />
+    <ClInclude Include="MemoryHandler.h" />
+    <ClInclude Include="PCA9536.h" />
     <ClInclude Include="Pins.h" />
+    <ClInclude Include="ScreenManager.h" />
+    <ClInclude Include="ScreenMessages.h" />
     <ClInclude Include="__vm\.SailingSpeedOMeter.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ButtonHandler.cpp" />
-    <ClCompile Include="C:\Users\Buci\Desktop\PCA9536.cpp" />
+    <ClCompile Include="MemoryHandler.cpp" />
+    <ClCompile Include="PCA9536.cpp" />
+    <ClCompile Include="ScreenManager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

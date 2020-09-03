@@ -31,7 +31,6 @@ enum ButtonStatus :byte
 
 enum ApplicationStates :byte {
 
-
 	AppStates_MainScreen = 0x00,
 
 	AppStates_JustSailMain = 0x01,

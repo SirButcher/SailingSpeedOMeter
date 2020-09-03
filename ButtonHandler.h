@@ -1,5 +1,8 @@
 // ButtonHandler.h
 
+#pragma once
+
+
 #ifndef _BUTTONHANDLER_h
 #define _BUTTONHANDLER_h
 
@@ -21,7 +24,7 @@ namespace ScreenButtonHandler {
 
 		public:
 
-			ButtonHandler();
+			void Init();
 
 			bool IsDeviceWorking();
 			ButtonStatus GetButtonState(ScreenButton button);
