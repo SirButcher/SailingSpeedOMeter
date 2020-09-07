@@ -20,9 +20,31 @@ char* MemoryHandler::MemoryController::GetScreenMessage(ScreenMessage message)
 	return buffer;
 }
 
-void MemoryHandler::MemoryController::StorePreSetScreenMessages()
+byte MemoryHandler::MemoryController::ReadByte(uint32_t address)
 {
-	//flash.writeCharArray(ScreenMessage_System_SystemReady, "   System Ready!   ", 20, true);
-	//flash.writeCharArray(ScreenMessage_Error_IOChipError, "   IO Chip error!  ", 20, true);
+	return flash.readByte(address);
 }
+
+void MemoryHandler::MemoryController::StorePreSetScreenMessagesIfNotYetSet(ScreenMessage address, char data[20])
+{
+	// If the given address is empty
+	// then every bit will be set to 1 (255 for a byte)
+	// If any data was written there, then (hopefully) we didn't wrote a 255.
+
+	flash.writeCharArray(address, data, 20, true);
+
+	/*
+	byte dataOnFirstByte = ReadByte(address);
+
+	if(dataOnFirstByte != 255)
+		flash.writeCharArray(address, data, 20, true);
+	*/
+}
+
+void MemoryHandler::MemoryController::EraseWholeMemory(bool confirm, bool secondConfirm, bool thirdConfim)
+{
+	if (confirm && secondConfirm && thirdConfim)
+		flash.eraseChip();
+}
+
 

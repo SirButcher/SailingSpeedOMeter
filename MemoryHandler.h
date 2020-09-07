@@ -22,11 +22,12 @@ Each sector is 4kbyte, which is organized into the following blocks:
 
 - Parameter sectors:
   used for screen messages. Each message take EXACTLY 20 bytes.
+  (Please see the ScreenMessages.h for fix addresses)
 1. 8kbyte
 	- Informations
 	- Address range: 0 - 8191
 2. 8kbyte
-    -  
+    - Menu texts
 	- Address range: 8192 - 16383
 3. 8kbyte
 	- 
@@ -39,10 +40,8 @@ Each sector is 4kbyte, which is organized into the following blocks:
 
 - Overlay:
 5. 32 kbyte
-   - Used for screen messages
-     (Please see the ScreenMessages.h for fix addresses)
+   -
    - Address range: 32768 - 65536 (per byte)
-   - Each message will use up EXACTLY 20 bytes!
 
 - Main data:
 6 - 67. 64 kbyte
@@ -77,16 +76,16 @@ namespace MemoryHandler
 			void Init();
 
 			char* GetScreenMessage(ScreenMessage message);
+			byte ReadByte(uint32_t address);
 
+			void StorePreSetScreenMessagesIfNotYetSet(ScreenMessage address, char data[20]);
 
+			void EraseWholeMemory(bool confirm, bool secondConfirm, bool thirdConfim);
 			
 
 		private:
 			SPIFlash flash;
 			char buffer[20];
-
-			void StorePreSetScreenMessages();
-
 	};
 }
 
