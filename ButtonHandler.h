@@ -18,7 +18,7 @@
 
 namespace ScreenButtonHandler {
 
-	const int minimumMillisecForButtonPress = 25;
+	const int minimumMillisecForButtonPress = 5;
 
 	class ButtonHandler {
 

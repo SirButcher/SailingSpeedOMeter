@@ -66,13 +66,13 @@ void ScreenButtonHandler::ButtonHandler::UpdateButtonStatus(long currentTime)
 			byte buttonStatus = ioExtender.getState(currentBtn);
 
 			// Iterate throught the possible states:
-			if (buttonStatus == 0 && previousButtonState[i] == 0)
+			if (buttonStatus == 0 && previousButtonState[i] == 0) // Nothing happened
 				currentButtonStatus[i] = ButtonStatus::ScreenButtonStatus_None;
-			else if (buttonStatus == 1 && previousButtonState[i] == 0)
+			else if (buttonStatus == 1 && previousButtonState[i] == 0) // It is pressed NOW, but was unpressed previously
 				currentButtonStatus[i] = ButtonStatus::ScreenButtonStatus_JustPressed;
-			else if (buttonStatus == 1 && previousButtonState[i] == 1)
+			else if (buttonStatus == 1 && previousButtonState[i] == 1) // Was pressed previosly and still pressed
 				currentButtonStatus[i] = ButtonStatus::ScreenButtonStatus_Pressed;
-			else if (buttonStatus == 0 && previousButtonState[i] == 1)
+			else if (buttonStatus == 0 && previousButtonState[i] == 1) // Released now, but was pressed previously
 				currentButtonStatus[i] = ButtonStatus::ScreenButtonStatus_Clicked;
 
 			// And finally save the current state as the previous one

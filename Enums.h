@@ -3,13 +3,13 @@
 enum ScreenButton :byte
 {
 	// Button IO0
-	ScreenButton_Confirm = 0x00,
+	ScreenButton_Confirm = 0x01,
 	// Button IO1
-	ScreenButton_Cancel = 0x01,
+	ScreenButton_Cancel = 0x00,
 	// Button IO2
-	ScreenButton_Up = 0x02,
+	ScreenButton_Up = 0x03,
 	// Button IO3
-	ScreenButton_Down = 0x03
+	ScreenButton_Down = 0x02,
 };
 
 enum ButtonStatus :byte
