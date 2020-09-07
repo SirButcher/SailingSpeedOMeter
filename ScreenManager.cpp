@@ -2,8 +2,10 @@
 #include "ScreenManager.h"
 
 
-void ScreenManager::ScreenController::Init(int _characterCount, int _lineCount)
+void ScreenManager::ScreenController::Init(MemoryController* _memoryController, int _characterCount, int _lineCount)
 {
+	memoryController = _memoryController;
+
 	characterCount = _characterCount;
 	lineCount = _lineCount;
 
@@ -21,14 +23,18 @@ void ScreenManager::ScreenController::DisplayText(const char text[20], int curso
 	lcd->print(text);
 }
 
-void ScreenManager::ScreenController::DisplayText(long flashAddress, int cursorX, int cursorY)
+void ScreenManager::ScreenController::ClearWholeScreen()
 {
-	//screenBufferIsClearLine = false;
+	lcd->clear();
+}
+
+void ScreenManager::ScreenController::DisplayText(ScreenMessage address, int cursorX, int cursorY)
+{
+	DisplayText(memoryController->GetScreenMessage(address), cursorX, cursorY);
 }
 
 void ScreenManager::ScreenController::ClearLine(int cursorY)
 {
-	/*
 	if (!screenBufferIsClearLine)
 	{
 		int i;
@@ -38,7 +44,6 @@ void ScreenManager::ScreenController::ClearLine(int cursorY)
 		screenBufferIsClearLine = true;
 	}
 
-	lcd.setCursor(0, cursorY);
-	lcd.print(screenBuffer);
-	*/
+	lcd->setCursor(0, cursorY);
+	lcd->print(screenBuffer);
 }
