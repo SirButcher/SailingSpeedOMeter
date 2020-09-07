@@ -55,9 +55,10 @@ void setup() {
 
 	// Initialize the connection to the flash memory:
 	memoryController.Init();
+	AddNewScreenMessages();
 
 	// Create and init the screen:
-	screenController.Init(screenCharacterCount, screenLineCount);
+	screenController.Init(&memoryController, screenCharacterCount, screenLineCount);
 
 	// Setup and enable the GPS and screen power
 	pinMode(Pin_GPS_EnablePower, OUTPUT);
@@ -73,18 +74,23 @@ void setup() {
 
 	if (pButtonHandler.IsDeviceWorking() == false)
 	{
-		screenController.DisplayText(memoryController.GetScreenMessage(ScreenMessage_Error_IOChipError), 0, 1);
+		screenController.DisplayText(ScreenMessage_Error_IOChipError, 0, 1);
 		
 		while (1)
-		{
 			delay(100000);
-		}
 	}
 
 	Serial.println("--- Setup completed succesfully ---");
 
 
-	screenController.DisplayText(memoryController.GetScreenMessage(ScreenMessage_System_SystemReady), 0, 1);
+
+	/*
+	Serial.print("Read data at address JustSail first char: ");
+	Serial.println(memoryController.ReadByte(ScreenMessage_Menu_JustSail));
+
+	Serial.print("Read data at address RaceMain first char: ");
+	Serial.println(memoryController.ReadByte(ScreenMessage_Menu_RaceMain));
+	*/
 
 	/*
 	lcd.setCursor(1, 0);
@@ -92,10 +98,78 @@ void setup() {
 	*/
 }
 
+
+int textToDisplay = 0;
 // the loop function runs over and over again until power down or reset
 void loop() {
 
+	pButtonHandler.UpdateButtonStatus(millis());
 
+	// We need to wait to make sure the 
+	// button pressed will be read correctly.
+	delay(5); 
+
+
+	bool textChanged = false;
+
+
+	if (pButtonHandler.GetButtonState(ScreenButton_Down) == ScreenButtonStatus_JustPressed)
+	{
+		textChanged = true;
+		textToDisplay++;
+
+	}
+	else if (pButtonHandler.GetButtonState(ScreenButton_Up) == ScreenButtonStatus_JustPressed)
+	{
+		textToDisplay--;
+		textChanged = true;
+	}
+	else if (pButtonHandler.GetButtonState(ScreenButton_Confirm) == ScreenButtonStatus_JustPressed)
+	{
+		screenController.ClearWholeScreen();
+	}
+	else if (pButtonHandler.GetButtonState(ScreenButton_Cancel) == ScreenButtonStatus_JustPressed)
+	{
+	}
+
+	if (textToDisplay > 7)
+		textToDisplay = 0;
+	if (textToDisplay < 0)
+		textToDisplay = 7;
+
+	if (!textChanged)
+		return;
+
+	switch (textToDisplay)
+	{
+		case 0:
+			screenController.DisplayText(ScreenMessage_System_SystemReady, 0, 1);
+			break;
+		case 1:
+			screenController.DisplayText(ScreenMessage_Menu_JustSail, 0, 1);
+			break;
+		case 2:
+			screenController.DisplayText(ScreenMessage_Menu_RaceMain, 0, 1);
+			break;
+		case 3:
+			screenController.DisplayText(ScreenMessage_Menu_BouySystem, 0, 1);
+			break;
+		case 4:
+			screenController.DisplayText(ScreenMessage_Menu_Statistics, 0, 1);
+			break;
+		case 5:
+			screenController.DisplayText(ScreenMessage_Menu_GPSDataMain, 0, 1);
+			break;
+		case 6:
+			screenController.DisplayText(ScreenMessage_Menu_DeviceSleep, 0, 1);
+			break;
+		case 7:
+			screenController.DisplayText(ScreenMessage_Error_IOChipError, 0, 1);
+			break;
+
+		default:
+			break;
+	}
 
 	//WriteGPSDebugInfo();
 
@@ -125,14 +199,9 @@ void loop() {
 	delay(150);
 	//Serial.println("End");
 	*/
-}
 
-void ArgumentTest(const char* format, ...)
-{
-	va_list args;
 
-	Serial.printf(format, args);
-	Serial.println();
+
 }
 
 void WriteGPSDebugInfo()
@@ -164,3 +233,25 @@ void WriteGPSDebugInfo()
 	}
 	*/
 }
+
+void AddNewScreenMessages()
+{
+
+	/*
+	memoryController.EraseWholeMemory(true, true, true);
+
+	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_System_SystemReady, "   System Ready!    ");
+
+	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Menu_JustSail, "  Just sail         ");
+	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Menu_RaceMain, "  Race!             ");
+	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Menu_BouySystem, "  Bouy system       ");
+	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Menu_Statistics, "  Statistics        ");
+	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Menu_GPSDataMain, "  GPS data          ");
+	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Menu_DeviceSleep, "  Device sleep      ");
+
+	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Error_IOChipError, "   IO Chip error!   ");
+	*/
+
+}
+
+
