@@ -30,7 +30,7 @@ Each sector is 4kbyte, which is organized into the following blocks:
     - Menu texts
 	- Address range: 8192 - 16383
 3. 8kbyte
-	- 
+	- Special, function texts / characters
 	- Address range: 16384 - 24575
 4. 8kbyte
     - Errors / Alerts
@@ -61,10 +61,6 @@ Program layout:
 
 Each main sector will have one, pre-dedicated task to ensure sufficiant space.
 
-
-
-
-
 */
 
 namespace MemoryHandler
@@ -75,7 +71,7 @@ namespace MemoryHandler
 
 			void Init();
 
-			char* GetScreenMessage(ScreenMessage message);
+			char* GetScreenMessage(ScreenMessage messageAddress);
 			byte ReadByte(uint32_t address);
 
 			void StorePreSetScreenMessagesIfNotYetSet(ScreenMessage address, char data[20]);
@@ -84,8 +80,9 @@ namespace MemoryHandler
 			
 
 		private:
+
 			SPIFlash flash;
-			char buffer[20];
+			char buffer[21];
 	};
 }
 
