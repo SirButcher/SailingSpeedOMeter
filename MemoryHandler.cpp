@@ -4,18 +4,29 @@
 
 #include "MemoryHandler.h"
 
+
+
+
+
+
 void MemoryHandler::MemoryController::Init()
 {
 	// Start the connection to the flash memory:
 	flash.setClock(1000000); // 1Mhz just to be safe.
 	flash.begin();
 
+	byte i;
+	for (i = 0; i < 21; i++)
+	{
+		buffer[i] = '\0';
+	}
+
 	//StorePreSetScreenMessages();
 }
 
-char* MemoryHandler::MemoryController::GetScreenMessage(ScreenMessage message)
+char* MemoryHandler::MemoryController::GetScreenMessage(ScreenMessage messageAddress)
 {
-	flash.readCharArray(message, buffer, 20, false);
+	flash.readCharArray(messageAddress, buffer, 20);
 
 	return buffer;
 }
@@ -31,14 +42,18 @@ void MemoryHandler::MemoryController::StorePreSetScreenMessagesIfNotYetSet(Scree
 	// then every bit will be set to 1 (255 for a byte)
 	// If any data was written there, then (hopefully) we didn't wrote a 255.
 
-	flash.writeCharArray(address, data, 20, true);
+	byte dataOnFirstByte = ReadByte(address);
+	Serial.print("Byte: ");
+	Serial.println(dataOnFirstByte);
 
 	/*
-	byte dataOnFirstByte = ReadByte(address);
+	
 
 	if(dataOnFirstByte != 255)
 		flash.writeCharArray(address, data, 20, true);
 	*/
+
+	flash.writeCharArray(address, data, 20, true);
 }
 
 void MemoryHandler::MemoryController::EraseWholeMemory(bool confirm, bool secondConfirm, bool thirdConfim)
