@@ -308,9 +308,12 @@ void WriteGPSDebugInfo()
 void AddNewScreenMessages()
 {
 
-	//memoryController.EraseWholeMemory(true, true, true);
+	memoryController.EraseWholeMemory(true, true, true);
 
-	/*
+	// ---------------------------------------------------------
+	// DO NOT FORGET TO UPDATE THE MemoryHandler.ccp file's GetMemoryAddressForScreenMessage METHOD IF YOU UPDATE THESE!!!!!!
+	// ---------------------------------------------------------
+	
 	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_System_SystemReady,		"   System Ready!    ");
 	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_System_AppName,			"SailingSpeed-O-Meter");
 	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_System_LoadingCentered, "      Loading...    ");
@@ -324,14 +327,19 @@ void AddNewScreenMessages()
 	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Menu_GPSDataMain,		"  GPS data          ");
 	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Menu_DeviceSleep,		"  Device sleep      ");
 
-	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Spec_HorSelector,		">                   ");
-	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Spec_VerSelector,		"V                   ");
+	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Spec_SelectorLeft,		">                   ");
+	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Spec_SelectorDown,		"V                   ");
+	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Spec_SelectorRight,		"<                   ");
+	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Spec_SelectorUp,		"^                   ");
 
 
 	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Error_IOChipError,		"   IO Chip error!   ");
 
 	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Error_UnsupportedSCRADD,"Unsupported SCR ADD ");
-	*/
+
+	// ---------------------------------------------------------
+	// DO NOT FORGET TO UPDATE THE MemoryHandler.ccp file's GetMemoryAddressForScreenMessage METHOD IF YOU UPDATE THESE!!!!!!
+	// ---------------------------------------------------------
 }
 
 

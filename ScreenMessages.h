@@ -2,6 +2,11 @@
 
 #include "arduino.h"
 
+
+// ---------------------------------------------------------
+// DO NOT FORGET TO UPDATE THE MemoryHandler.ccp file's GetMemoryAddressForScreenMessage METHOD IF YOU UPDATE THESE!!!!!!
+// ---------------------------------------------------------
+
 enum ScreenMessage
 {
 	// ------------------------- System informations -------------------------
@@ -46,14 +51,25 @@ enum ScreenMessage
 
 	// ------------------------ Special, function keys -----------------------
 
+	// Third parameter section
+	// Address range: 16384 - 24575
+
 	// ">                   "
-	ScreenMessage_Spec_HorSelector,
+	ScreenMessage_Spec_SelectorLeft,
 
 	// "V                   "
-	ScreenMessage_Spec_VerSelector,
+	ScreenMessage_Spec_SelectorDown,
 
+	// "<                   "
+	ScreenMessage_Spec_SelectorRight,
+
+	// "^                   "
+	ScreenMessage_Spec_SelectorUp,
 
 	// ----------------------------  Error messages: -------------------------
+
+	// Fourth parameter section
+	// Address range: 24576 - 32767
 
 	// "   IO Chip error!   "
 	ScreenMessage_Error_IOChipError,
@@ -61,3 +77,7 @@ enum ScreenMessage
 	// "Unsupported SCR ADD "
 	ScreenMessage_Error_UnsupportedSCRADD,
 };
+
+// ---------------------------------------------------------
+// DO NOT FORGET TO UPDATE THE MemoryHandler.ccp file's GetMemoryAddressForScreenMessage METHOD IF YOU UPDATE THESE!!!!!!
+// ---------------------------------------------------------

@@ -33,7 +33,6 @@ Each sector is 4kbyte, which is organized into the following blocks:
 	- Address range: 24576 - 32767
 
 
-
 - Overlay:
 5. 32 kbyte
    -

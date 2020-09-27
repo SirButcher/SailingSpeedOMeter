@@ -6,15 +6,13 @@
 #ifndef _BUTTONHANDLER_h
 #define _BUTTONHANDLER_h
 
+#include "arduino.h"
+
 #include "PCA9536.h"
 #include "ButtonStatus.h"
 #include "ScreenButtons.h"
 
-#if defined(ARDUINO) && ARDUINO >= 100
-	#include "arduino.h"
-#else
-	#include "WProgram.h"
-#endif
+
 
 
 namespace ScreenButtonHandler {

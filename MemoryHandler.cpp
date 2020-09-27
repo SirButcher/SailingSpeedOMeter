@@ -95,10 +95,14 @@ uint32_t MemoryController::GetMemoryAddressForScreenMessage(ScreenMessage messag
 		case ScreenMessage_Menu_DeviceSleep:
 			return 8292;
 
-		case ScreenMessage_Spec_HorSelector:
+		case ScreenMessage_Spec_SelectorLeft:
 			return 16384;
-		case ScreenMessage_Spec_VerSelector:
+		case ScreenMessage_Spec_SelectorDown:
 			return 16404;
+		case ScreenMessage_Spec_SelectorRight:
+			return 16424;
+		case ScreenMessage_Spec_SelectorUp:
+			return 16444;
 
 		case ScreenMessage_Error_IOChipError:
 			return 24576;
