@@ -4,38 +4,44 @@
  Author:	Gabriel Butcher
 */
 
-
-#include "MemoryHandler.h"
-#include "Pins.h"
-#include "Enums.h"
-
-#include <stdarg.h>
-
+// Sub-system libs
 #include <Wire.h>
-
 
 #include <AltSoftSerial.h>
 #include <NMEAGPS.h>
 #include <GPSport.h>
+
+// Enums and variables
+#include "ApplicationStates.h"
+#include "ScreenButtons.h"
+#include "Pins.h"
+
+// Program module libs
+#include "MemoryHandler.h"
 
 #include "ButtonHandler.h"
 #include "ScreenManager.h"
 #include "MemoryHandler.h"
 
 
+// Screens and modules
+#include "MainMenu.h"
 
 
-ApplicationStates currentAppState = AppStates_MainScreen;
 
 NMEAGPS  gps; // This parses the GPS characters
 gps_fix  fix; // This holds on to the latest values
 
-ButtonHandler pButtonHandler;
+ButtonHandler buttonHandler;
 ScreenController screenController;
 MemoryController memoryController;
 
-const int screenCharacterCount = 20;
-const int screenLineCount = 4;
+// Menu and subsystems:
+MainMenu mainMenu;
+
+const uint8_t screenCharacterCount = 20;
+const uint8_t screenLineCount = 4;
+
 
 
 // the setup function runs once when you press reset or power the board
@@ -60,13 +66,17 @@ void setup() {
 	// Create and init the screen:
 	screenController.Init(&memoryController, screenCharacterCount, screenLineCount);
 
+
+	// Set up all the screens and modules:
+	mainMenu.Init(&buttonHandler, &screenController);
+
+	/*
 	// Setup and enable the GPS and screen power
 	pinMode(Pin_GPS_EnablePower, OUTPUT);
 	pinMode(Pin_Screen_EnablePower, OUTPUT);
 
 	digitalWrite(Pin_GPS_EnablePower, LOW);
 	digitalWrite(Pin_Screen_EnablePower, LOW);
-
 
 
 	// Initalize the button handler - it requires working I2C bus
@@ -82,7 +92,39 @@ void setup() {
 
 	Serial.println("--- Setup completed succesfully ---");
 
+	
+	screenController.DisplayText(ScreenMessage_System_NumberTest, 0, 0);
+	*/
 
+
+
+	/*
+	char* data = memoryController.GetScreenMessage(ScreenMessage_System_NumberTest);
+
+	int i;
+
+	Serial.print("Data: ");
+	for (i = 0; i < 21; i++)
+	{
+		Serial.print(data[i], HEX);
+		Serial.print(' ');
+		delay(50);
+	}
+
+	Serial.println();
+
+	Serial.println("Done.");
+
+
+
+	screenController.DisplayText(data, 0, 1);
+	//screenController.DisplayText(handCraftedData, 0, 1);
+
+	delay(100000);
+	*/
+
+
+	//screenController.DisplayText("Another line", 0, 2);
 
 	/*
 	Serial.print("Read data at address JustSail first char: ");
@@ -99,77 +141,36 @@ void setup() {
 }
 
 
-int textToDisplay = 0;
-// the loop function runs over and over again until power down or reset
+int runCounter = 0;
 void loop() {
 
-	pButtonHandler.UpdateButtonStatus(millis());
-
-	// We need to wait to make sure the 
-	// button pressed will be read correctly.
-	delay(5); 
-
-
-	bool textChanged = false;
+	static unsigned long loopStartTime = millis();
+	
+	static ApplicationStates currentAppState = AppStates_MainScreen;
+	static ApplicationStates newAppState = AppStates_None;
+	static bool movingToNewModule = true;
 
 
-	if (pButtonHandler.GetButtonState(ScreenButton_Down) == ScreenButtonStatus_JustPressed)
+	// First, update the button's status.
+	buttonHandler.UpdateButtonStatus();
+
+
+
+	// Check if we need to switch to a new screen / module
+	// If we do, we need to Init that new screen.
+	if (movingToNewModule)
 	{
-		textChanged = true;
-		textToDisplay++;
+		SwitchToNewState(newAppState);
 
+		// State change handled - remove the flag.
+		movingToNewModule = false;
 	}
-	else if (pButtonHandler.GetButtonState(ScreenButton_Up) == ScreenButtonStatus_JustPressed)
-	{
-		textToDisplay--;
-		textChanged = true;
-	}
-	else if (pButtonHandler.GetButtonState(ScreenButton_Confirm) == ScreenButtonStatus_JustPressed)
-	{
-		screenController.ClearWholeScreen();
-	}
-	else if (pButtonHandler.GetButtonState(ScreenButton_Cancel) == ScreenButtonStatus_JustPressed)
-	{
-	}
+	
 
-	if (textToDisplay > 7)
-		textToDisplay = 0;
-	if (textToDisplay < 0)
-		textToDisplay = 7;
+	
 
-	if (!textChanged)
-		return;
 
-	switch (textToDisplay)
-	{
-		case 0:
-			screenController.DisplayText(ScreenMessage_System_SystemReady, 0, 1);
-			break;
-		case 1:
-			screenController.DisplayText(ScreenMessage_Menu_JustSail, 0, 1);
-			break;
-		case 2:
-			screenController.DisplayText(ScreenMessage_Menu_RaceMain, 0, 1);
-			break;
-		case 3:
-			screenController.DisplayText(ScreenMessage_Menu_BouySystem, 0, 1);
-			break;
-		case 4:
-			screenController.DisplayText(ScreenMessage_Menu_Statistics, 0, 1);
-			break;
-		case 5:
-			screenController.DisplayText(ScreenMessage_Menu_GPSDataMain, 0, 1);
-			break;
-		case 6:
-			screenController.DisplayText(ScreenMessage_Menu_DeviceSleep, 0, 1);
-			break;
-		case 7:
-			screenController.DisplayText(ScreenMessage_Error_IOChipError, 0, 1);
-			break;
 
-		default:
-			break;
-	}
 
 	//WriteGPSDebugInfo();
 
@@ -202,6 +203,74 @@ void loop() {
 
 
 
+	// We need to wait to make sure the button presses are read correctly.
+	// As it is isn't a real-time app where timing is oh-so-important
+	// we can just wait a little to make sure everything is OK.
+	delay(ScreenButtonHandler::minimumMillisecForButtonPress);
+
+
+	delay(2500);
+}
+
+bool RunCurrentModule(ApplicationStates currentAppState, ApplicationStates* newAppState)
+{
+	switch (currentAppState)
+	{
+		case AppStates_MainScreen:
+			return mainMenu.MainLoop(newAppState);
+		case AppStates_JustSailMain:
+			break;
+		case AppStates_JustSailLaps:
+			break;
+		case AppStates_RaceSetup:
+			break;
+		case AppSates_RacePreRace:
+			break;
+		case AppStates_RaceMain:
+			break;
+		case AppStates_BouyManager:
+			break;
+		case AppStates_Statistics:
+			break;
+		case AppStates_GPSData:
+			break;
+		case AppStates_DeviceSleep:
+			break;
+		default:
+			return false;
+	}
+
+	return false;
+}
+
+void SwitchToNewState(ApplicationStates stateToSwitch)
+{
+	switch (stateToSwitch)
+	{
+		case AppStates_MainScreen:
+			mainMenu.TakeOver();
+			break;
+		case AppStates_JustSailMain:
+			break;
+		case AppStates_JustSailLaps:
+			break;
+		case AppStates_RaceSetup:
+			break;
+		case AppSates_RacePreRace:
+			break;
+		case AppStates_RaceMain:
+			break;
+		case AppStates_BouyManager:
+			break;
+		case AppStates_Statistics:
+			break;
+		case AppStates_GPSData:
+			break;
+		case AppStates_DeviceSleep:
+			break;
+		default:
+			break;
+	}
 }
 
 void WriteGPSDebugInfo()
@@ -234,24 +303,35 @@ void WriteGPSDebugInfo()
 	*/
 }
 
+
+
 void AddNewScreenMessages()
 {
 
+	//memoryController.EraseWholeMemory(true, true, true);
+
 	/*
-	memoryController.EraseWholeMemory(true, true, true);
+	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_System_SystemReady,		"   System Ready!    ");
+	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_System_AppName,			"SailingSpeed-O-Meter");
+	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_System_LoadingCentered, "      Loading...    ");
+	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_System_NumberTest,		"01234567890123456789");
 
-	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_System_SystemReady, "   System Ready!    ");
 
-	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Menu_JustSail, "  Just sail         ");
-	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Menu_RaceMain, "  Race!             ");
-	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Menu_BouySystem, "  Bouy system       ");
-	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Menu_Statistics, "  Statistics        ");
-	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Menu_GPSDataMain, "  GPS data          ");
-	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Menu_DeviceSleep, "  Device sleep      ");
+	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Menu_JustSail,			"  Just sail         ");
+	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Menu_RaceMain,			"  Race!             ");
+	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Menu_BouySystem,		"  Bouy system       ");
+	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Menu_Statistics,		"  Statistics        ");
+	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Menu_GPSDataMain,		"  GPS data          ");
+	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Menu_DeviceSleep,		"  Device sleep      ");
 
-	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Error_IOChipError, "   IO Chip error!   ");
+	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Spec_HorSelector,		">                   ");
+	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Spec_VerSelector,		"V                   ");
+
+
+	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Error_IOChipError,		"   IO Chip error!   ");
+
+	memoryController.StorePreSetScreenMessagesIfNotYetSet(ScreenMessage_Error_UnsupportedSCRADD,"Unsupported SCR ADD ");
 	*/
-
 }
 
 

@@ -1,8 +1,9 @@
 #pragma once
 
+#include "arduino.h"
+
 enum ButtonStatus :byte
 {
-
 	ScreenButtonStatus_None = 0x00,
 
 	// The button pressed just now, it was unpressed previously.

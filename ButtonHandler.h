@@ -29,11 +29,9 @@ namespace ScreenButtonHandler {
 
 			bool IsDeviceWorking();
 			ButtonStatus GetButtonState(ScreenButton button);
-			void UpdateButtonStatus(long currentTime);
+			void UpdateButtonStatus();
 
 		private:
-			long lastCheckTime;
-
 			bool isDeviceWorking;
 
 			PCA9536 ioExtender;

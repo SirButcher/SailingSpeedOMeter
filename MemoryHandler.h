@@ -3,11 +3,7 @@
 #ifndef _MEMORYHANDLER_h
 #define _MEMORYHANDLER_h
 
-#if defined(ARDUINO) && ARDUINO >= 100
-	#include "arduino.h"
-#else
-	#include "WProgram.h"
-#endif
+#include "arduino.h"
 
 #include "ScreenMessages.h"
 #include <SPIMemory.h>
@@ -74,11 +70,12 @@ namespace MemoryHandler
 			char* GetScreenMessage(ScreenMessage messageAddress);
 			byte ReadByte(uint32_t address);
 
+			uint32_t GetMemoryAddressForScreenMessage(ScreenMessage message);
+
 			void StorePreSetScreenMessagesIfNotYetSet(ScreenMessage address, char data[20]);
 
 			void EraseWholeMemory(bool confirm, bool secondConfirm, bool thirdConfim);
 			
-
 		private:
 
 			SPIFlash flash;

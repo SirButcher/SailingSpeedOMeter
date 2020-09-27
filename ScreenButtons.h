@@ -1,5 +1,7 @@
 #pragma once
 
+#include "arduino.h"
+
 enum ScreenButton :byte
 {
 	// Button IO0

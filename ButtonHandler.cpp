@@ -8,7 +8,6 @@
 void ScreenButtonHandler::ButtonHandler::Init()
 {
 	// Set up the variables:
-	lastCheckTime = -1; // To ensure a forced first time check
 	isDeviceWorking = false;
 
 	// Check if the device even connected / working:
@@ -34,6 +33,9 @@ void ScreenButtonHandler::ButtonHandler::Init()
 	// Wait a little, then do another test:
 	delay(10);
 	isDeviceWorking = ioExtender.ping() == 0;
+
+	if (isDeviceWorking)
+		UpdateButtonStatus();
 }
 
 bool ScreenButtonHandler::ButtonHandler::IsDeviceWorking()
@@ -46,40 +48,35 @@ ButtonStatus ScreenButtonHandler::ButtonHandler::GetButtonState(ScreenButton but
 	return currentButtonStatus[button];
 }
 
-void ScreenButtonHandler::ButtonHandler::UpdateButtonStatus(long currentTime)
+void ScreenButtonHandler::ButtonHandler::UpdateButtonStatus()
 {
-	// We only want to check the current statuses if the elapsed time
-	// more than our threshold (to handle button bouncing)
+	// This method shouldn't be run too fast, or we couldn't handle the button bouncing.
+	// The main loop should wait at least a little until the button itself settles
+	// physically into it's actual state.
 
-	if (currentTime - lastCheckTime > minimumMillisecForButtonPress)
+	// A button is considered pressed if it was not pressed last time
+	// but pressed now.
+
+	byte i;
+	for (i = 0; i < 4; i++)
 	{
-		// OK, enough time is elapsed!
-		lastCheckTime = currentTime;
+		pin_t currentBtn = static_cast<pin_t>(i);
 
-		// a button is considered pressed if it was not pressed last time
-		// but pressed now.
+		// Get the current status:
+		byte buttonStatus = ioExtender.getState(currentBtn);
 
-		byte i;
-		for (i = 0; i < 4; i++)
-		{
-			pin_t currentBtn = static_cast<pin_t>(i);
+		// Iterate throught the possible states:
+		if (buttonStatus == 0 && previousButtonState[i] == 0) // Nothing happened
+			currentButtonStatus[i] = ButtonStatus::ScreenButtonStatus_None;
+		else if (buttonStatus == 1 && previousButtonState[i] == 0) // It is pressed NOW, but was unpressed previously
+			currentButtonStatus[i] = ButtonStatus::ScreenButtonStatus_JustPressed;
+		else if (buttonStatus == 1 && previousButtonState[i] == 1) // Was pressed previosly and still pressed
+			currentButtonStatus[i] = ButtonStatus::ScreenButtonStatus_Pressed;
+		else if (buttonStatus == 0 && previousButtonState[i] == 1) // Released now, but was pressed previously
+			currentButtonStatus[i] = ButtonStatus::ScreenButtonStatus_Clicked;
 
-			// Get the current status:
-			byte buttonStatus = ioExtender.getState(currentBtn);
-
-			// Iterate throught the possible states:
-			if (buttonStatus == 0 && previousButtonState[i] == 0) // Nothing happened
-				currentButtonStatus[i] = ButtonStatus::ScreenButtonStatus_None;
-			else if (buttonStatus == 1 && previousButtonState[i] == 0) // It is pressed NOW, but was unpressed previously
-				currentButtonStatus[i] = ButtonStatus::ScreenButtonStatus_JustPressed;
-			else if (buttonStatus == 1 && previousButtonState[i] == 1) // Was pressed previosly and still pressed
-				currentButtonStatus[i] = ButtonStatus::ScreenButtonStatus_Pressed;
-			else if (buttonStatus == 0 && previousButtonState[i] == 1) // Released now, but was pressed previously
-				currentButtonStatus[i] = ButtonStatus::ScreenButtonStatus_Clicked;
-
-			// And finally save the current state as the previous one
-			// for the next time when we check it.
-			previousButtonState[i] = buttonStatus;
-		}
+		// And finally save the current state as the previous one
+		// for the next time when we check it.
+		previousButtonState[i] = buttonStatus;
 	}
 }

@@ -1,8 +1,8 @@
 #pragma once
 
+#include "arduino.h"
 
-
-enum ScreenMessage : uint32_t
+enum ScreenMessage
 {
 	// ------------------------- System informations -------------------------
 
@@ -10,16 +10,16 @@ enum ScreenMessage : uint32_t
 	// Address range: 0 - 8191
 
 	// "   System Ready!    "
-	ScreenMessage_System_SystemReady = 0,
+	ScreenMessage_System_SystemReady,
 
 	// "SailingSpeed-O-Meter"
-	ScreenMessage_System_AppName = 20,
+	ScreenMessage_System_AppName,
 
 	// "      Loading...    "
-	ScreenMessage_System_LoadingCentered = 40,
+	ScreenMessage_System_LoadingCentered,
 
 	// "01234567890123456789"
-	ScreenMessage_System_NumberTest = 60,
+	ScreenMessage_System_NumberTest,
 
 	// ---------------------------- Menu messages: ---------------------------
 
@@ -27,34 +27,37 @@ enum ScreenMessage : uint32_t
 	// Address range: 8192 - 16383
 
 	// "  Just sail         "
-	ScreenMessage_Menu_JustSail = 8192,
+	ScreenMessage_Menu_JustSail,
 
 	// "  Race!             "
-	ScreenMessage_Menu_RaceMain = 8212,
+	ScreenMessage_Menu_RaceMain,
 
 	// "  Bouy system       "
-	ScreenMessage_Menu_BouySystem = 8232,
+	ScreenMessage_Menu_BouySystem,
 
 	// "  Statistics        "
-	ScreenMessage_Menu_Statistics = 8252,
+	ScreenMessage_Menu_Statistics,
 
 	// "  GPS data          "
-	ScreenMessage_Menu_GPSDataMain = 8272,
+	ScreenMessage_Menu_GPSDataMain,
 
 	// "  Device sleep      "
-	ScreenMessage_Menu_DeviceSleep = 8292,
+	ScreenMessage_Menu_DeviceSleep,
 
 	// ------------------------ Special, function keys -----------------------
 
 	// ">                   "
-	ScreenMessage_Spec_HorSelector = 16384,
+	ScreenMessage_Spec_HorSelector,
 
 	// "V                   "
-	ScreenMessage_Spec_VerSelector = 16404,
+	ScreenMessage_Spec_VerSelector,
 
 
 	// ----------------------------  Error messages: -------------------------
 
 	// "   IO Chip error!   "
-	ScreenMessage_Error_IOChipError = 24576,
+	ScreenMessage_Error_IOChipError,
+
+	// "Unsupported SCR ADD "
+	ScreenMessage_Error_UnsupportedSCRADD,
 };

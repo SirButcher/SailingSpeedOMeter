@@ -16,6 +16,15 @@
     <Filter Include="Header Files\MemoryMap">
       <UniqueIdentifier>{75e12bc0-ec6e-4530-abf2-800c01d5fae7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Enums">
+      <UniqueIdentifier>{87b68558-9f9a-42aa-adfd-5fcda28d3279}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Modules">
+      <UniqueIdentifier>{f59228ed-455a-4cd9-8949-e8f60f092b94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Modules">
+      <UniqueIdentifier>{861debcf-f13a-45e3-baf9-3881b5f5568f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="SailingSpeedOMeter.ino" />
@@ -30,9 +39,6 @@
     <ClInclude Include="ButtonHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Enums.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ScreenManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -44,6 +50,18 @@
     </ClInclude>
     <ClInclude Include="ScreenMessages.h">
       <Filter>Header Files\MemoryMap</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationStates.h">
+      <Filter>Header Files\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonStatus.h">
+      <Filter>Header Files\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="ScreenButtons.h">
+      <Filter>Header Files\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenu.h">
+      <Filter>Header Files\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -58,6 +76,9 @@
     </ClCompile>
     <ClCompile Include="MemoryHandler.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMenu.cpp">
+      <Filter>Source Files\Modules</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
