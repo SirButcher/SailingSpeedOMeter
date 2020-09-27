@@ -7,7 +7,8 @@
 #define _BUTTONHANDLER_h
 
 #include "PCA9536.h"
-#include "Enums.h"
+#include "ButtonStatus.h"
+#include "ScreenButtons.h"
 
 #if defined(ARDUINO) && ARDUINO >= 100
 	#include "arduino.h"

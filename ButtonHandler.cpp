@@ -2,6 +2,8 @@
 // Created: 22/08/2020
 
 #include "ButtonHandler.h"
+#include "ButtonStatus.h"
+#include "ScreenButtons.h"
 
 void ScreenButtonHandler::ButtonHandler::Init()
 {

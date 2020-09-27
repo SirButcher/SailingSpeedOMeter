@@ -6,7 +6,6 @@
 #define _SCREENMANAGER_h
 
 #include "Pins.h"
-#include "Enums.h"
 #include "MemoryHandler.h"
 #include <LiquidCrystal.h>
 
