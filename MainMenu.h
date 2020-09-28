@@ -3,9 +3,12 @@
 #ifndef _MAINMENU_H
 #define _MAINMENU_H
 
+#include <Arduino.h>
+
 // Enums and variables
 #include "ApplicationStates.h"
 #include "ScreenButtons.h"
+#include "ScreenMessages.h"
 
 // Program module libs
 #include "ButtonHandler.h"
@@ -14,9 +17,11 @@
 
 namespace MenuSystem
 {
+	const uint8_t screenMainMenu_menuItemCount = 6;
 
 	class MainMenu
 	{
+
 	public:
 
 		void Init(ButtonHandler* _buttonHandler, ScreenController* _screenController);
@@ -29,10 +34,13 @@ namespace MenuSystem
 		bool MainLoop(ApplicationStates* newState);
 
 	private:
+
+		void UpdateMenu(uint8_t selectedMenu, uint8_t menuToDisplayFrom);
+
 		ButtonHandler* buttonHandler;
 		ScreenController* screenController;
 
-
+		ScreenMessage menuOptions[screenMainMenu_menuItemCount];
 	};
 
 }
