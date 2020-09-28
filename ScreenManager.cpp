@@ -2,35 +2,51 @@
 #include "ScreenManager.h"
 
 
-void ScreenManager::ScreenController::Init(MemoryController* _memoryController, int _characterCount, int _lineCount)
+
+void ScreenManager::ScreenController::Init(MemoryController* _memoryController)
 {
 	memoryController = _memoryController;
 
-	characterCount = _characterCount;
-	lineCount = _lineCount;
-
-	lcd = new LiquidCrystal(Pin_Screen_RS, Pin_Screen_EN, Pin_Screen_D4, Pin_Screen_D5, Pin_Screen_D6, Pin_Screen_D7);
-
 	// Initialize the screen's starting params
-	lcd->begin(characterCount, lineCount); // set up number of columns and rows
-	lcd->clear();
-	lcd->display();
-}
+	lcd.begin(screenLineCharacterCount, screenLineCount); // set up number of columns and rows
 
-void ScreenManager::ScreenController::DisplayText(const char text[20], int cursorX, int cursorY)
-{
-	lcd->setCursor(cursorX, cursorY);
-	lcd->print(text);
+	// Turn off every not-needed function:
+	lcd.noAutoscroll();
+	lcd.noBlink();
+	lcd.noCursor();
+
+	//Clear the screen, and set the display value (in case it is a new screen)
+	lcd.clear();
+	lcd.display();
+
+	delay(10);
 }
 
 void ScreenManager::ScreenController::ClearWholeScreen()
 {
-	lcd->clear();
+	lcd.clear();
 }
 
-void ScreenManager::ScreenController::DisplayText(ScreenMessage address, int cursorX, int cursorY)
+
+void ScreenManager::ScreenController::DisplayText(const char text[20], uint8_t lenght, uint8_t cursorX, uint8_t cursorY)
 {
-	DisplayText(memoryController->GetScreenMessage(address), cursorX, cursorY);
+	lcd.setCursor(cursorX, cursorY);
+	lcd.write(text, lenght);
+}
+
+void ScreenManager::ScreenController::DisplayText(const char text[20], uint8_t cursorX, uint8_t cursorY)
+{
+	DisplayText(text, 20, cursorX, cursorY);
+}
+
+void ScreenManager::ScreenController::DisplayText(ScreenMessage address, uint8_t cursorX, uint8_t cursorY)
+{
+	DisplayText(memoryController->GetScreenMessage(address), 20, cursorX, cursorY);
+}
+
+void ScreenManager::ScreenController::DisplayText(ScreenMessage address, uint8_t lenght, uint8_t cursorX, uint8_t cursorY)
+{
+	DisplayText(memoryController->GetScreenMessage(address), lenght, cursorX, cursorY);
 }
 
 void ScreenManager::ScreenController::ClearLine(int cursorY)
@@ -44,6 +60,6 @@ void ScreenManager::ScreenController::ClearLine(int cursorY)
 		screenBufferIsClearLine = true;
 	}
 
-	lcd->setCursor(0, cursorY);
-	lcd->print(screenBuffer);
+	lcd.setCursor(0, cursorY);
+	lcd.print(screenBuffer);
 }
