@@ -1,8 +1,5 @@
 #pragma once
 
-#include "arduino.h"
-
-
 // ---------------------------------------------------------
 // DO NOT FORGET TO UPDATE THE MemoryHandler.ccp file's GetMemoryAddressForScreenMessage METHOD IF YOU UPDATE THESE!!!!!!
 // ---------------------------------------------------------

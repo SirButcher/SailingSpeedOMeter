@@ -60,6 +60,8 @@ Each main sector will have one, pre-dedicated task to ensure sufficiant space.
 
 namespace MemoryHandler
 {
+	const char emptyScreenChar = ' ';
+
 	class MemoryController
 	{
 		public:
